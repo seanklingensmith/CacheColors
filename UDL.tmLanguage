@@ -388,56 +388,76 @@
 			<key>name</key>
 			<string>comment.line.double-slash.source.isc.udl</string>
 		</dict>
-		<key>member-attr-list</key>
+		<key>member-attr</key>
 		<dict>
 			<key>begin</key>
-			<string>\[</string>
+			<string>(\G|\[)</string>
 			<key>comment</key>
-			<string>[attr=value]</string>
+			<string>attr=value</string>
 			<key>end</key>
-			<string>\]</string>
-			<key>name</key>
-			<string>keyword.operator.source.isc.udl</string>
+			<string>(,|\])</string>
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>captures</key>
+					<key>begin</key>
+					<string>\s*(=)\s*</string>
+					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
 						<dict>
 							<key>name</key>
-							<string>storage.modifier.source.isc.udl</string>
-						</dict>
-						<key>3</key>
-						<dict>
-							<key>name</key>
 							<string>keyword.operator.source.isc.udl</string>
-						</dict>
-						<key>5</key>
-						<dict>
-							<key>name</key>
-							<string>entity.type.name.source.isc.udl</string>
-						</dict>
-						<key>6</key>
-						<dict>
-							<key>name</key>
-							<string>string.quoted.double.source.isc.udl</string>
-						</dict>
-						<key>7</key>
-						<dict>
-							<key>name</key>
-							<string>invalid.illegal.source.isc.udl</string>
-						</dict>
-						<key>8</key>
-						<dict>
-							<key>name</key>
-							<string>constant.numeric.source.isc.udl</string>
 						</dict>
 					</dict>
 					<key>comment</key>
-					<string>attr=value</string>
+					<string>attr value</string>
+					<key>end</key>
+					<string>(?=,|\s|\])|$</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#value-string</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#value-literal</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#value-expression</string>
+						</dict>
+						<dict>
+							<key>match</key>
+							<string>[A-Za-z_][A-Za-z0-9_]+</string>
+							<key>name</key>
+							<string>entity.type.name.source.isc.udl</string>
+						</dict>
+					</array>
+				</dict>
+				<dict>
+					<key>comment</key>
+					<string>attr name</string>
 					<key>match</key>
-					<string>([A-Za-z ]+)\s*((=)\s*(([A-Za-z][A-Za-z0-9]+)|(".*")|(\{.*\})|([0-9.]*)))?(,)?</string>
+					<string>\b[A-Za-z][A-Za-z0-9 ]+\b</string>
+					<key>name</key>
+					<string>storage.modifier.source.isc.udl</string>
+				</dict>
+			</array>
+		</dict>
+		<key>member-attr-list</key>
+		<dict>
+			<key>begin</key>
+			<string>(?=\[)</string>
+			<key>comment</key>
+			<string>[attr=value]</string>
+			<key>end</key>
+			<string>(?&lt;=\])</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#member-attr</string>
 				</dict>
 			</array>
 		</dict>

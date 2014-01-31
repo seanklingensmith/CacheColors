@@ -326,11 +326,11 @@
         //TODO: Refactor
         "member-attr-list": {
             "comment": "[attr=value]",
-            "begin": "\\[",
-            "end": "\\]",
-            "name": "keyword.operator.source.isc.udl",
+            "begin": "(?=\\[)",
+            "end": "(?<=\\])",
             "patterns": [
-                {
+                { "include": "#member-attr"}
+                /*{
                     "comment": "attr=value",
                     "match": "([A-Za-z ]+)\\s*((=)\\s*(([A-Za-z][A-Za-z0-9]+)|(\".*\")|(\\{.*\\})|([0-9.]*)))?(,)?",
                     "captures": {
@@ -341,6 +341,32 @@
                         "7": {"name": "invalid.illegal.source.isc.udl"},            // {} code value (SQLComputeCode?) TODO: display correctly
                         "8": {"name": "constant.numeric.source.isc.udl"}            //numeric literal
                     }
+                }*/
+            ]
+        },
+        "member-attr": {
+            "comment": "attr=value",
+            "begin": "(\\G|\\[)",
+            "end": "(,|\\])",
+            "patterns": [
+                {
+                    "comment": "attr value",
+                    "begin": "\\s*(=)\\s*",
+                    "end": "(?=,|\\s|\\])|$",
+                    "beginCaptures": {
+                        "1": {"name": "keyword.operator.source.isc.udl"}
+                    },
+                    "patterns": [
+                        {"include": "#value-string"},
+                        {"include": "#value-literal"},
+                        {"include": "#value-expression"},
+                        {"match": "[A-Za-z_][A-Za-z0-9_]+", "name": "entity.type.name.source.isc.udl"}
+                    ]
+                },
+                {
+                    "comment": "attr name",
+                    "match": "\\b[A-Za-z][A-Za-z0-9 ]+\\b",
+                    "name": "storage.modifier.source.isc.udl"
                 }
             ]
         },
