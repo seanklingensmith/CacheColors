@@ -1,0 +1,370 @@
+{
+    "name": "Caché Class", 
+    "scopeName": "source.source.isc.udl",
+    "firstLineMatch": "\\s*((?i)Include|Class|///)",
+    "fileTypes": [
+        "cls"
+    ],
+    "patterns": [
+        { "include": "#include-directive"},
+        { "include": "#field-comment" },
+        { "include": "#class-definition" },
+        {
+            "comment": "Class Block",
+            "begin": "\\{",
+            "end": "\\}",
+            "patterns": [
+                { "include": "#field-comment" },
+                { "include": "#block-comment" },
+                { "include": "#line-comment" },
+                { "include": "#property-definition" },
+                { "include": "#parameter-definition" },
+                { "include": "#method-definition" },
+                { "include": "#xdata-definition" },
+                { "include": "#index-definition" },
+                { "include": "#fk-definition" },
+                { "include": "#method-block" },
+                { "include": "text.xml" }                 //Storage definition
+            ]
+        }
+    ],
+    "repository": {
+        "include-directive": {
+            "comment": "#include directive",
+            "begin": "^\\s*((?i)Include)\\b", //\\s+([%A-Za-z][A-Za-z0-9\\.]*)",
+            "end": "$",
+            "beginCaptures": {
+                "1": {"name":"keyword.control.source.isc.udl"}
+            },
+            "patterns": [
+                { "include": "#type-name-list" },
+                { "include": "#type-name" }
+            ]
+        },
+        "field-comment": {
+            "comment": "Field comments (triple slash)",
+            "match": "^\\s*///.*$",
+            "name": "comment.block.documentation.source.isc.udl"
+        },
+        "block-comment": {
+            "comment": "/* */ comments",
+            "begin": "/\\*",
+            "end": "\\*/",
+            "name": "comment.block.source.isc.udl"
+        },
+        "line-comment": {
+            "comment": "//comment",
+            "match": "^\\s*//.*",
+            "name": "comment.line.double-slash.source.isc.udl"
+        },
+        "method-block": {
+            "comment": "Method Block",
+            "begin": "\\{",
+            "end": "(?<=\\})",
+            "patterns": [
+                { "include": "#block-xml" },
+                { "include": "#block-sql" },
+                { "include": "#block-cos" },
+                { "include": "#block-js" }
+            ]
+        },
+        "block-xml": {
+            "comment": "is this an XData block?",
+            "begin": "\\G\\s*(?=<.*>)",
+            "end": "\\}",
+            "patterns": [
+                {"include": "text.xml"} 
+            ]
+        },
+        "block-sql": {
+            "comment": "is this a Query block?",
+            "begin": "\\G\\s*(?=((?i)SELECT|UPDATE|CREATE|DELETE|DROP|INSERT|ALTER))",
+            "end": "\\}",
+            "patterns": [
+                {"include": "source.sql"} 
+            ]
+        },
+        "block-js": {
+            "comment": "is this a ClientMethod block?",
+            "begin": "^",
+            "end": "\\}",
+            "patterns": [
+                {"include": "source.js"} 
+            ]
+        },
+        "block-cos": {
+            "comment": "Cache ObjectScript block",
+            "begin": "\\G\\s+(?=((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK|New|\\$\\$\\$|#|;|//|/\\*))",
+            "end": "\\}",
+            "patterns": [
+                {"include": "#cos"}
+            ]            
+        },
+        "cos": {
+            "comment": "COS syntax highlighting",
+            "patterns": [
+                {"include": "#cos-syntax"},
+                {"include": "$self"}
+            ]
+        },
+        "cos-syntax": {
+            "comment": "placeholder for source.isc.cos",
+            "match":"\\b((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK)\\b",
+            "captures": {
+                "1": { "name": "keyword.control.source.isc.udl" }
+            }
+        },
+        "keyword-extends": {
+            "comment": "Extends Classname",
+            "begin": "\\b((?i)Extends)\\b",
+            "end": "(?=\\[)|$",
+            "name": "keyword.operator.source.isc.udl",
+            "patterns": [
+                { "include": "#type-name-list" },
+                { "include": "#type-name" }
+            ]
+        },
+        "keyword-as": {
+            "comment": "As <type>",
+            "begin": "\\b((?i)As)\\b",
+            "end": "(?=\\[|;|=|\\))|$",
+            "beginCaptures": {
+                "1": {"name": "keyword.operator.source.isc.udl"}
+            },
+            "patterns": [
+                { "include": "#type-attr-list" },
+                { "include": "#type-name" }
+            ]
+        },
+        "keyword-on": {
+            "comment": "<index> On <field-list>",
+            "begin": "\\b((?i)On)\\b",
+            "end": "(?=\\[|;)|$",
+            "beginCaptures": {
+                "1": {"name": "keyword.operator.source.isc.udl"}
+            },
+            "patterns": [
+                { "include": "#type-name-list" },
+                { "include": "#type-name" }
+            ]
+        },
+        "type-name-list": {
+            "comment": "(<type1>,<type2>)",
+            "begin": "\\(",
+            "end": "\\)",
+            "name": "keyword.operator.source.isc.udl",
+            "patterns": [
+                {"include": "#type-name"}
+            ]
+        },
+        "type-name": {
+            "comment": "<class name>",
+            "match": "(\\b|%)([A-Za-z][A-Za-z0-9.]*)\\b",
+            "name": "entity.name.type.source.isc.udl"
+        },
+        "member-name-list": {
+            "comment": "(<type1>,<type2>)",
+            "begin": "\\(",
+            "end": "\\)",
+            "name": "keyword.operator.source.isc.udl",
+            "patterns": [
+                {"include": "#member-name"}
+            ]
+        },
+        "member-name": {
+            "comment": "<member name>",
+            "match": "(\\b|%)([A-Za-z][A-Za-z0-9]*)\\b",
+            "name": "entity.name.type.source.isc.udl"
+        },
+        "method-parameter-list": {
+            "comment": "method (<parms>,<parm>)",
+            "begin": "(?=\\()",
+            "end": "(?<=\\))", //(?=\\s*(\\b|\\[|$))",
+            "patterns": [
+                //{"include": "#method-parameter"},
+                {"include": "#method-parameter"}
+               // {"match": ",", "name": "keyword.operator.source.isc.udl"}
+            ]
+        },
+        "method-parameter": {
+            "comment": "<parm> As <type>=<value>",
+            "begin": "(\\(|\\G)",//(?=\\s*[A-Za-z%][A-Za-z0-9]*\\b)",
+            "end": "(\\))|(,)",
+            "beginCaptures": {
+                "1": {"name": "keyword.operator.source.isc.udl"}
+            },
+            "endCaptures": {
+                "1": {"name": "keyword.operator.source.isc.udl"},
+                "2": {"name": "keyword.operator.source.isc.udl"}
+            },
+            "patterns": [
+                { "include": "#parameter-value" },
+                { "include": "#keyword-as" },
+                { "include": "#member-name" }
+            ]
+        },
+        "parameter-value": {
+            "comment": "<parm>=<value>",
+            "begin": "(=)",
+            "end": "(?=,|;|\\s|\\))|$",
+            "beginCaptures": {
+                "1": {"name": "keyword.operator.source.isc.udl"}
+            },
+            "patterns": [
+                {"include": "#value-string"},
+                {"include": "#value-literal"},
+                {"include": "#value-expression"}
+            ]
+        },
+        //TODO: match internal quotes (messes up method-parameter)
+        "value-string": {
+            "comment": "quoted string",
+            "match": "\".*\"",
+            "name": "string.quoted.double.source.isc.udl"
+        },
+        //TODO: scientific notation? Other "non-standard" formats?
+        "value-literal": {
+            "comment": "numeric constant",
+            "match": "([0-9]+\\.?[0-9]*)|(\\.[0-9]+)",
+            "name": "constant.numeric.source.isc.udl"
+        },
+        //TODO: actually implement coloring 
+        "value-expression": {
+            "comment": "{<expression}",
+            "match": "\\{.*\\}",
+            "name": "invalid.illegal.source.isc.udl"
+        },
+        "class-definition": {
+            "comment": "Class Definition Line",
+            "begin": "^\\s*((?i)Class)\\b",
+            "end": "$",
+            "beginCaptures": {
+                "1": {"name": "support.class.source.isc.udl"}
+            },
+            "patterns": [
+                { "include": "#member-attr-list" },
+                { "include": "#keyword-extends" },
+                { "include": "#type-name" }
+            ]
+        },
+        "property-definition": {
+            "comment": "Property Definition Line",
+            "begin":"^\\s*((?i)Property|Relationship)\\b",
+            "end": "$",
+            "beginCaptures": {
+                "1": { "name": "storage.type.source.isc.udl" }     //Property keyword
+            },
+            "patterns": [
+                {"include": "#member-attr-list" },
+                {"include": "#keyword-as" },
+                {"include": "#member-name"},
+                {"match": ";", "name":"keyword.operator.source.isc.udl"}
+            ]
+        },
+        ///TODO: value can be a COS expression using {}
+        "parameter-definition": {
+            "comment": "Parameter Definition Line",
+            "begin": "^\\s*((?i)Parameter)\\b",
+            "end": "$",
+            "beginCaptures": {
+                "1": { "name": "storage.type..source.isc.udl" }           //Parameter keyword
+            },
+            "patterns": [
+                { "include": "#parameter-value" },
+                { "include": "#keyword-as" },
+                { "include": "#member-name" },
+                { "match": ";", "name":"keyword.operator.source.isc.udl" }
+            ]
+        },
+        "method-definition": {
+            "comment": "Method Definition Line",
+            "begin": "^\\s*((?i)Method|Trigger|ClassMethod|ClientMethod|Query)\\b",
+            "end": "$",
+            "beginCaptures": {
+                "1": { "name": "storage.type.source.isc.udl" }     //Method keyword
+            },
+            "patterns": [
+                { "include": "#member-attr-list" },
+                { "include": "#method-parameter-list" },
+                { "include": "#keyword-as" },
+                { "include": "#member-name" }
+            ]
+        },
+        "xdata-definition": {
+            "comment": "XData Definition Line",
+            "begin": "^\\s*((?i)XData)\\b", //\\s+([A-Z-a-z%][A-Za-z0-9.]*)",
+            "end": "$",
+            "beginCaptures": {
+                "1": { "name": "storage.type.source.isc.udl" },     //Xdata keyword
+                "2": { "name": "entity.name.type.source.isc.udl" }     //xdataname
+            },
+            "patterns": [
+                {"include": "#member-attr-list" },
+                {"include": "#member-name" }
+            ]
+        },
+        //TODO: Index on collections (e.g., "Index Idx on Collection(ELEMENTS)")
+        //TODO: Explicit collation (e.g., "Index Idx on Field As Collation", or "... On (F1 As Collation1, F2 As Collation2)")
+        "index-definition": {
+            "comment": "Index Definition Line",
+            "begin": "^\\s*((?i)Index)\\s+([A-Z-a-z%][A-Za-z0-9.]*)",
+            "end": "$",
+            "beginCaptures": {
+                "1": { "name": "storage.type.source.isc.udl" },     //Xdata keyword
+                "2": { "name": "entity.name.type.source.isc.udl" }     //xdataname
+            },
+            "patterns": [
+                { "include": "#member-attr-list" },
+                { "include": "#keyword-on" },
+                { "match": ";", "name":"keyword.operator.source.isc.udl" }
+            ]
+        },
+        //TODO: Implement FK's
+        "fk-definition": {
+            "comment": "Foriegn Key Definition Line"
+        },
+        //TODO: Refactor
+        "member-attr-list": {
+            "comment": "[attr=value]",
+            "begin": "\\[",
+            "end": "\\]",
+            "name": "keyword.operator.source.isc.udl",
+            "patterns": [
+                {
+                    "comment": "attr=value",
+                    "match": "([A-Za-z ]+)\\s*((=)\\s*(([A-Za-z][A-Za-z0-9]+)|(\".*\")|(\\{.*\\})|([0-9.]*)))?(,)?",
+                    "captures": {
+                        "1": {"name": "storage.modifier.source.isc.udl"},           //Attribute name
+                        "3": {"name": "keyword.operator.source.isc.udl"},           //= equals
+                        "5": {"name": "entity.type.name.source.isc.udl"},           //text value
+                        "6": {"name": "string.quoted.double.source.isc.udl"},       //quoted string value
+                        "7": {"name": "invalid.illegal.source.isc.udl"},            // {} code value (SQLComputeCode?) TODO: display correctly
+                        "8": {"name": "constant.numeric.source.isc.udl"}            //numeric literal
+                    }
+                }
+            ]
+        },
+        //TODO: Refactor
+        "type-attr-list": {
+            "comment": "As <Type>(<PARM>=<VALUE>)",
+            "begin": "\\(",
+            "end": "\\)",
+            "name": "keyword.operator.source.isc.udl",
+            "patterns": [
+                {
+                    "comment": "attr=value",
+                    "match": "([A-Za-z]+)\\s*((=)\\s*(([A-Za-z][A-Za-z0-9]+)|(\".*\")|(\\{.*\\})|([0-9.]*)))?(,)?",
+                    "captures": {
+                        "1": {"name": "storage.modifier.source.isc.udl"},           //Attribute name
+                        "3": {"name": "keyword.operator.source.isc.udl"},           //= equals
+                        "5": {"name": "entity.type.name.source.isc.udl"},           //text value
+                        "6": {"name": "string.quoted.double.source.isc.udl"},       //quoted string value
+                        "7": {"name": "invalid.illegal.source.isc.udl"},            // {} value
+                        "8": {"name": "constant.numeric.source.isc.udl"}            //numeric literal
+                    }
+                }
+            ]
+        }
+    },
+    "uuid": "12faaa2e-31d0-4e2c-8c31-a91770a45a8c"
+}
