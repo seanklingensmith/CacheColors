@@ -91,7 +91,7 @@
 			<key>end</key>
 			<string>\*/</string>
 			<key>name</key>
-			<string>comment.block.source.isc.udl</string>
+			<string>comment.block.source.isc.udl}</string>
 		</dict>
 		<key>block-cos</key>
 		<dict>
@@ -197,7 +197,7 @@
 			<array>
 				<dict>
 					<key>include</key>
-					<string>#cos-syntax</string>
+					<string>source.isc.cos</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -824,7 +824,7 @@
 			<key>comment</key>
 			<string>quoted string</string>
 			<key>match</key>
-			<string>".*"</string>
+			<string>\".*\"</string>
 			<key>name</key>
 			<string>string.quoted.double.source.isc.udl</string>
 		</dict>

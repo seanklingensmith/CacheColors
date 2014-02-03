@@ -1,0 +1,74 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+
+#TODO: .. and obj.property 
+#TODO: properly parse commands
+#TODO: what's up with comma separated numbers?
+#TODO: ^ globals and routines
+#TODO: 
+
+---
+name: "Caché ObjectScript"
+scopeName: source.isc.cos
+fileTypes: [rtn]
+uuid: cafbcfff-31b9-4df5-a059-cea3160291c5
+
+patterns:
+- {include: '#directive-include'}
+- {include: '#directive-define'}
+- {include: '#literal-number'}
+- {include: '#literal-string'}
+- {include: '#command'}
+- {include: '#control'}
+- {include: '#tag-definition'}
+- {include: '#line-comment'}
+- {include: '#block-comment'}
+- {include: '#macro'}
+- {include: '#tag-value'}
+- {include: '#function'}
+
+repository:
+  command:
+    comment: <command>
+    match: (?<=\s)((?i)SET|S|DO|D|KILL|K|GOTO|G|READ|R|WRITE|W|OPEN|O|USE|U|CLOSE|C|CONTINUE|FOR|F|HALT|HANG|H|JOB|J|LOCK|L|MERGE|M|NEW|N|QUIT|Q|RETURN|RET|TSTART|TS|TCOMMIT|TC|TROLLBACK|TR|THROW|VIEW|V|XECUTE|X|ZKILL|ZK|ZNSPACE|ZN|ZTRAP|ZWRITE|ZW|ZZDUMP|ZZWRITE)(?=\s)
+    name: keyword.operator.source.isc.cos
+  control:
+    match: (?<=2)((?i)IF|I|WHILE|FOR|F|TRY|CATCH|ELSE|E|ELSEIF)(?=\s)
+    name: keyword.control.source.isc.cos
+  directive-include:
+    match: ^\s+((?i)#include)\s+([A-Za-z][A-Za-z0-9]*)\s+
+    captures: 
+      '1': {name: keyword.control.source.isc.cos}
+      '2': {name: entity.type.name.source.isc.cos}
+  directive-define:
+    match: ^\s+((?i)#define)\s+([A-Za-z][A-Za-z0-9]*)\s+
+    captures:
+      '1': {name: keyword.control.source.isc.cos}
+      '2': {name: keyword.other.source.isc.cos}
+  function: 
+    comment: $function
+    match: (\$[A-Za-z]+)\b
+    name: entity.name.function.source.isc.cos
+  tag-definition: 
+    match: ^([A-Za-z][A-Za-z0-9]*)\b
+    name: entity.name.function.source.isc.cos
+  tag-value:
+    match: (\$\$[A-Za-z%][A-Za-z0-9]*)(\^[A-Za-z%][A-Za-z0-9.]*)?
+    captures: 
+      '1': { name: entity.name.tag.source.isc.cos}
+      '2': { name: entity.name.section.source.isc.cos}
+  line-comment:
+    match: \s(//|#|;).*$
+    name: comment.line.source.isc.cos
+  block-comment:
+    begin: \s/\*
+    end: \*/
+    name: comment.block.source.isc.cos
+  macro:
+    match: (\$\$\$[A-Za-z][A-Za-z0-9]*)(\(.*\))?
+    name: keyword.other.source.isc.cos
+  literal-number:
+    match: (?<=[^A-Za-z0-9\"])([0-9]*\.?[0-9]+)(?=[^A-Z-a-z0-9\"])
+    name: constant.numeric.source.isc.cos
+  literal-string:
+    match: \".*\"
+    name: string.quoted.double.source.isc.cos
