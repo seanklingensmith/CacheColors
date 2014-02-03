@@ -58,6 +58,10 @@
 			<key>include</key>
 			<string>#function</string>
 		</dict>
+		<dict>
+			<key>include</key>
+			<string>#oref-dot-property</string>
+		</dict>
 	</array>
 	<key>repository</key>
 	<dict>
@@ -158,6 +162,24 @@
 			<string>(\$\$\$[A-Za-z][A-Za-z0-9]*)(\(.*\))?</string>
 			<key>name</key>
 			<string>keyword.other.source.isc.cos</string>
+		</dict>
+		<key>oref-dot-property</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>variable.other.source.isc.cos</string>
+				</dict>
+				<key>5</key>
+				<dict>
+					<key>name</key>
+					<string>support.function.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>((\.)|([A-Za-z%][A-Za-z0-9]*))(\.([A-Za-z%][A-Za-z0-9]*))+</string>
 		</dict>
 		<key>tag-definition</key>
 		<dict>

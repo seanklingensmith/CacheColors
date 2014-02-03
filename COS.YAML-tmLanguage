@@ -25,6 +25,7 @@ patterns:
 - {include: '#macro'}
 - {include: '#tag-value'}
 - {include: '#function'}
+- {include: '#oref-dot-property'}
 
 repository:
   command:
@@ -72,3 +73,12 @@ repository:
   literal-string:
     match: \".*\"
     name: string.quoted.double.source.isc.cos
+  oref-dot-property:
+    match: ((\.)|([A-Za-z%][A-Za-z0-9]*))(\.([A-Za-z%][A-Za-z0-9]*))+
+    captures:
+      '3': { name: variable.other.source.isc.cos }
+      '5': { name: support.function.source.isc.cos }
+
+
+
+
