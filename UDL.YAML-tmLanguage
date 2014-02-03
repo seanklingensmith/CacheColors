@@ -1,4 +1,7 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
+
+# TODO: Rework block identification
+
 fileTypes: [cls]
 firstLineMatch: \s*((?i)Include|Class|///)
 name: "Cach\xE9 Class"
@@ -75,6 +78,8 @@ repository:
     comment: Field comments (triple slash)
     match: ^\s*///.*$
     name: comment.block.documentation.source.isc.udl
+  
+  #TODO: Implement FK's
   fk-definition: 
     comment: Foriegn Key Definition Line
   include-directive:
@@ -86,6 +91,9 @@ repository:
     patterns:
     - {include: '#type-name-list'}
     - {include: '#type-name'}
+  
+  #TODO: Index on collections (e.g., "Index Idx on Collection(ELEMENTS)")
+  #TODO: Explicit collation (e.g., "Index Idx on Field As Collation", or "... On (F1 As Collation1, F2 As Collation2)")
   index-definition:
     begin: ^\s*((?i)Index)\s+([A-Z-a-z%][A-Za-z0-9.]*)
     beginCaptures:
@@ -233,6 +241,8 @@ repository:
     - {include: '#keyword-as'}
     - {include: '#member-name'}
     - {match: ;, name: keyword.operator.source.isc.udl}
+  
+  #TODO: Refactor
   type-attr-list:
     begin: \(
     comment: As <Type>(<PARM>=<VALUE>)
@@ -259,14 +269,22 @@ repository:
     name: keyword.operator.source.isc.udl
     patterns:
     - {include: '#type-name'}
-  value-expression: {comment: '{<expression}', match: '\{.*\}', name: invalid.illegal.source.isc.udl}
+
+  #TODO: actually implement coloring of expressions
+  value-expression: 
+    comment: '{<expression}'
+    match: \{.*\}
+    name: invalid.illegal.source.isc.udl
+
+  #TODO: scientific notation? Other "non-standard" formats?
   value-literal: 
     comment: numeric constant
     match: ([0-9]+\.?[0-9]*)|(\.[0-9]+)
     name: constant.numeric.source.isc.udl
+
   value-string: 
     comment: quoted string
-    match: \".*\"
+    match: \"[^\"]*\"
     name: string.quoted.double.source.isc.udl
   xdata-definition:
     begin: ^\s*((?i)XData)\b
