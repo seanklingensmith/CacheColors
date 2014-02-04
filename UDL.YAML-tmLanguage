@@ -1,7 +1,10 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 
 # TODO: Rework block identification
+# TODO: coloring for method paramters? 
 # TODO: Review syntax categories
+# TODO: enforce order correctly?
+# TODO: color invalid syntax
 
 fileTypes: [cls]
 firstLineMatch: \s*((?i)Include|Class|///)
@@ -81,7 +84,6 @@ repository:
     match: ^\s*///.*$
     name: comment.block.documentation.source.isc.udl
   
-  #TODO: Implement FK's
   fk-definition: 
     comment: Foriegn Key Definition Line
     begin: \s*(ForeignKey)\b 
@@ -89,7 +91,23 @@ repository:
     beginCaptures:
       '1': { name: storage.type.source.isc.udl }
     patterns:
-    - {include: '#type-name'}
+    - begin: \s\b
+      end: \s
+      patterns:
+      - {include: '#fk-type'}
+    - begin: \b((?i)References)\b
+      end: (?=\[|;|$)
+      beginCaptures: 
+        '1': {name: keyword.control.source.isc.udl}
+      patterns:
+      - {include: '#fk-type'}
+
+  fk-type:
+     match: '(\%|\b)([A-Za-z0-9]*)\(([A-Za-z\%][A-Za-z0-9]*)\)'
+     captures:
+       '1': {name: keyword.operator.source.isc.udl}
+       '2': {name: keyword.operator.source.isc.udl}
+       '3': {name: entity.name.source.isc.udl}
 
   include-directive:
     begin: ^\s*((?i)Include)\b
@@ -308,7 +326,7 @@ repository:
 
   value-string: 
     comment: quoted string
-    match: \"[^\"]*\"
+    match: (\".*?\")+
     name: string.quoted.double.source.isc.udl
   xdata-definition:
     begin: ^\s*((?i)XData)\b

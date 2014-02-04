@@ -250,10 +250,63 @@
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>include</key>
-					<string>#type-name</string>
+					<key>begin</key>
+					<string>\s\b</string>
+					<key>end</key>
+					<string>\s</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#fk-type</string>
+						</dict>
+					</array>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>\b((?i)References)\b</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.control.source.isc.udl</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>(?=\[|;|$)</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#fk-type</string>
+						</dict>
+					</array>
 				</dict>
 			</array>
+		</dict>
+		<key>fk-type</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.udl</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.udl</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.source.isc.udl</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(\%|\b)([A-Za-z0-9]*)\(([A-Za-z\%][A-Za-z0-9]*)\)</string>
 		</dict>
 		<key>include-directive</key>
 		<dict>
@@ -899,7 +952,7 @@
 			<key>comment</key>
 			<string>quoted string</string>
 			<key>match</key>
-			<string>\"[^\"]*\"</string>
+			<string>(\".*?\")+</string>
 			<key>name</key>
 			<string>string.quoted.double.source.isc.udl</string>
 		</dict>
