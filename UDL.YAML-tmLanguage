@@ -1,6 +1,7 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 
 # TODO: Rework block identification
+# TODO: Review syntax categories
 
 fileTypes: [cls]
 firstLineMatch: \s*((?i)Include|Class|///)
@@ -82,6 +83,13 @@ repository:
   #TODO: Implement FK's
   fk-definition: 
     comment: Foriegn Key Definition Line
+    begin: \s*(ForeignKey)\b 
+    end: \s*;\s*$
+    beginCaptures:
+      '1': { name: storage.type.source.isc.udl }
+    patterns:
+    - {include: '#type-name'}
+
   include-directive:
     begin: ^\s*((?i)Include)\b
     beginCaptures:
@@ -92,7 +100,6 @@ repository:
     - {include: '#type-name-list'}
     - {include: '#type-name'}
   
-  #TODO: Index on collections (e.g., "Index Idx on Collection(ELEMENTS)")
   #TODO: Explicit collation (e.g., "Index Idx on Field As Collation", or "... On (F1 As Collation1, F2 As Collation2)")
   index-definition:
     begin: ^\s*((?i)Index)\s+([A-Z-a-z%][A-Za-z0-9.]*)
@@ -131,14 +138,27 @@ repository:
     patterns:
     - {include: '#type-name-list'}
     - {include: '#type-name'}
+    - comment: index on collection
+      match: \((KEYS)\)|\((ELEMENTS)\)
+      name: keyword.operator.source.isc.udl
+      captures: 
+        '1': {name: storage.modifier.source.isc.udl}
+        '2': {name: storage.modifier.source.isc.udl}
+
+  index-field:
+    comment: 
   line-comment: 
     comment: //comment
     match: ^\s*//.*
     name: comment.line.double-slash.source.isc.udl
   member-attr:
-    begin: (\G|\[)
+    begin: (\[|\G)
     comment: attr=value
     end: (,|\])
+    beginCaptures:
+        '1': {name: keyword.operator.source.isc.udl}
+    endCaptures:
+        '1': {name: keyword.operator.source.isc.udl}
     patterns:
     - begin: \s*(=)\s*
       beginCaptures:
@@ -154,8 +174,8 @@ repository:
       match: \b[A-Za-z][A-Za-z0-9 ]+\b
       name: storage.modifier.source.isc.udl
   member-attr-list:
+    comment: [attr=value]
     begin: (?=\[)
-    comment: '[attr=value]'
     end: (?<=\])
     patterns:
     - {include: '#member-attr'}
@@ -221,7 +241,7 @@ repository:
     - {include: '#member-name'}
     - {match: ;, name: keyword.operator.source.isc.udl}
   parameter-value:
-    begin: (=)
+    begin: (=)\s*
     beginCaptures:
       '1': {name: keyword.operator.source.isc.udl}
     comment: <parm>=<value>
@@ -252,18 +272,18 @@ repository:
     - captures:
         '1': {name: storage.modifier.source.isc.udl}
         '3': {name: keyword.operator.source.isc.udl}
-        '5': {name: entity.type.name.source.isc.udl}
-        '6': {name: string.quoted.double.source.isc.udl}
-        '7': {name: invalid.illegal.source.isc.udl}
-        '8': {name: constant.numeric.source.isc.udl}
+        '7': {name: entity.type.name.source.isc.udl}
+        '5': {name: string.quoted.double.source.isc.udl}
+        '8': {name: invalid.illegal.source.isc.udl}
+        '9': {name: constant.numeric.source.isc.udl}
       comment: attr=value
-      match: ([A-Za-z]+)\s*((=)\s*(([A-Za-z][A-Za-z0-9]+)|(".*")|(\{.*\})|([0-9.]*)))?(,)?
+      match: ([A-Za-z]+)\s*((=)\s*(((\"[^\"]*\")+)|([A-Za-z][A-Za-z0-9]+)|(\{.*\})|([0-9.]*)))?(,)?
   type-name: 
     comment: <class name>
-    match: (\b|%)([A-Za-z][A-Za-z0-9.]*)\b
+    match: (\s|%)([A-Za-z][A-Za-z0-9.]*)\b
     name: entity.name.type.source.isc.udl
   type-name-list:
-    begin: \(
+    begin: \s\(
     comment: (<type1>,<type2>)
     end: \)
     name: keyword.operator.source.isc.udl
@@ -272,7 +292,7 @@ repository:
 
   #TODO: actually implement coloring of expressions
   value-expression: 
-    comment: '{<expression}'
+    comment: '{<expression>}'
     match: \{.*\}
     name: invalid.illegal.source.isc.udl
 

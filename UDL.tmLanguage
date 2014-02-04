@@ -231,8 +231,27 @@
 		</dict>
 		<key>fk-definition</key>
 		<dict>
+			<key>begin</key>
+			<string>\s*(ForeignKey)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.source.isc.udl</string>
+				</dict>
+			</dict>
 			<key>comment</key>
 			<string>Foriegn Key Definition Line</string>
+			<key>end</key>
+			<string>\s*;\s*$</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#type-name</string>
+				</dict>
+			</array>
 		</dict>
 		<key>include-directive</key>
 		<dict>
@@ -300,6 +319,11 @@
 					<string>keyword.operator.source.isc.udl</string>
 				</dict>
 			</array>
+		</dict>
+		<key>index-field</key>
+		<dict>
+			<key>comment</key>
+			<false/>
 		</dict>
 		<key>keyword-as</key>
 		<dict>
@@ -377,6 +401,27 @@
 					<key>include</key>
 					<string>#type-name</string>
 				</dict>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>storage.modifier.source.isc.udl</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>storage.modifier.source.isc.udl</string>
+						</dict>
+					</dict>
+					<key>comment</key>
+					<string>index on collection</string>
+					<key>match</key>
+					<string>\((KEYS)\)|\((ELEMENTS)\)</string>
+					<key>name</key>
+					<string>keyword.operator.source.isc.udl</string>
+				</dict>
 			</array>
 		</dict>
 		<key>line-comment</key>
@@ -391,11 +436,27 @@
 		<key>member-attr</key>
 		<dict>
 			<key>begin</key>
-			<string>(\G|\[)</string>
+			<string>(\[|\G)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.udl</string>
+				</dict>
+			</dict>
 			<key>comment</key>
 			<string>attr=value</string>
 			<key>end</key>
 			<string>(,|\])</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.udl</string>
+				</dict>
+			</dict>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -450,7 +511,9 @@
 			<key>begin</key>
 			<string>(?=\[)</string>
 			<key>comment</key>
-			<string>[attr=value]</string>
+			<array>
+				<string>attr=value</string>
+			</array>
 			<key>end</key>
 			<string>(?&lt;=\])</string>
 			<key>patterns</key>
@@ -654,7 +717,7 @@
 		<key>parameter-value</key>
 		<dict>
 			<key>begin</key>
-			<string>(=)</string>
+			<string>(=)\s*</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -749,19 +812,19 @@
 						<key>5</key>
 						<dict>
 							<key>name</key>
-							<string>entity.type.name.source.isc.udl</string>
-						</dict>
-						<key>6</key>
-						<dict>
-							<key>name</key>
 							<string>string.quoted.double.source.isc.udl</string>
 						</dict>
 						<key>7</key>
 						<dict>
 							<key>name</key>
-							<string>invalid.illegal.source.isc.udl</string>
+							<string>entity.type.name.source.isc.udl</string>
 						</dict>
 						<key>8</key>
+						<dict>
+							<key>name</key>
+							<string>invalid.illegal.source.isc.udl</string>
+						</dict>
+						<key>9</key>
 						<dict>
 							<key>name</key>
 							<string>constant.numeric.source.isc.udl</string>
@@ -770,7 +833,7 @@
 					<key>comment</key>
 					<string>attr=value</string>
 					<key>match</key>
-					<string>([A-Za-z]+)\s*((=)\s*(([A-Za-z][A-Za-z0-9]+)|(".*")|(\{.*\})|([0-9.]*)))?(,)?</string>
+					<string>([A-Za-z]+)\s*((=)\s*(((\"[^\"]*\")+)|([A-Za-z][A-Za-z0-9]+)|(\{.*\})|([0-9.]*)))?(,)?</string>
 				</dict>
 			</array>
 		</dict>
@@ -779,14 +842,14 @@
 			<key>comment</key>
 			<string>&lt;class name&gt;</string>
 			<key>match</key>
-			<string>(\b|%)([A-Za-z][A-Za-z0-9.]*)\b</string>
+			<string>(\s|%)([A-Za-z][A-Za-z0-9.]*)\b</string>
 			<key>name</key>
 			<string>entity.name.type.source.isc.udl</string>
 		</dict>
 		<key>type-name-list</key>
 		<dict>
 			<key>begin</key>
-			<string>\(</string>
+			<string>\s\(</string>
 			<key>comment</key>
 			<string>(&lt;type1&gt;,&lt;type2&gt;)</string>
 			<key>end</key>
@@ -804,7 +867,7 @@
 		<key>value-expression</key>
 		<dict>
 			<key>comment</key>
-			<string>{&lt;expression}</string>
+			<string>{&lt;expression&gt;}</string>
 			<key>match</key>
 			<string>\{.*\}</string>
 			<key>name</key>
