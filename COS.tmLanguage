@@ -152,7 +152,7 @@
 		<key>literal-string</key>
 		<dict>
 			<key>match</key>
-			<string>\".*\"</string>
+			<string>\".*?\"</string>
 			<key>name</key>
 			<string>string.quoted.double.source.isc.cos</string>
 		</dict>
