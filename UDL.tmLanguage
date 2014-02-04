@@ -96,7 +96,7 @@
 		<key>block-cos</key>
 		<dict>
 			<key>begin</key>
-			<string>\G\s+(?=((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK|New|\$\$\$|#|;|//|/\*))</string>
+			<string>(?=\G\s+((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK|New|\$\$\$|#|;|//|/\*))</string>
 			<key>comment</key>
 			<string>Cache ObjectScript block</string>
 			<key>end</key>
