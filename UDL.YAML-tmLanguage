@@ -32,7 +32,7 @@ repository:
     end: \*/
     name: comment.block.source.isc.udl}
   block-cos:
-    begin: \G\s+(?=((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK|New|\$\$\$|#|;|//|/\*))
+    begin: (?=\G\s+((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK|New|\$\$\$|#|;|//|/\*))
     comment: Cache ObjectScript block
     end: \}
     patterns:
