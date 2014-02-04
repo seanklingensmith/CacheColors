@@ -56,14 +56,15 @@ repository:
     patterns:
     - {include: text.xml}
   class-definition:
+    comment: Class Definition Line
     begin: ^\s*((?i)Class)\b
+    end: $
     beginCaptures:
       '1': {name: support.class.source.isc.udl}
-    comment: Class Definition Line
-    end: $
+    name: illegal.invalid.source.isc.udl
     patterns:
-    - {include: '#member-attr-list'}
     - {include: '#keyword-extends'}
+    - {include: '#member-attr-list'}
     - {include: '#type-name'}
   cos:
     comment: COS syntax highlighting
@@ -113,17 +114,19 @@ repository:
     - {include: '#keyword-on'}
     - {match: ;, name: keyword.operator.source.isc.udl}
   keyword-as:
+    comment: As <type>
     begin: \b((?i)As)\b
+    end: (?=\[|;|=|,|\)|$)
     beginCaptures:
       '1': {name: keyword.operator.source.isc.udl}
-    comment: As <type>
-    end: (?=\[|;|=|\))|$
     patterns:
     - {include: '#type-attr-list'}
     - {include: '#type-name'}
   keyword-extends:
-    begin: \b((?i)Extends)\b
     comment: Extends Classname
+    begin: \b((?i)Extends)\b
+    beginCaptures:
+      '1': {name: keyword.control.source.isc.udl}
     end: (?=\[)|$
     name: keyword.operator.source.isc.udl
     patterns:
@@ -262,29 +265,30 @@ repository:
     - {include: '#member-name'}
     - {match: ;, name: keyword.operator.source.isc.udl}
   
-  #TODO: Refactor
   type-attr-list:
     begin: \(
-    comment: As <Type>(<PARM>=<VALUE>)
-    end: \)
+    end: (?<=\))
     name: keyword.operator.source.isc.udl
     patterns:
-    - captures:
-        '1': {name: storage.modifier.source.isc.udl}
-        '3': {name: keyword.operator.source.isc.udl}
-        '7': {name: entity.type.name.source.isc.udl}
-        '5': {name: string.quoted.double.source.isc.udl}
-        '8': {name: invalid.illegal.source.isc.udl}
-        '9': {name: constant.numeric.source.isc.udl}
-      comment: attr=value
-      match: ([A-Za-z]+)\s*((=)\s*(((\"[^\"]*\")+)|([A-Za-z][A-Za-z0-9]+)|(\{.*\})|([0-9.]*)))?(,)?
+     - { include: '#type-attr'}
+  type-attr:
+    begin: ([A-Za-z]+)\s*((=)\s*)
+    end: \,|\)
+    beginCaptures:
+      '1': {name: storage.modifier.source.isc.udl}
+      '3': {name: keyword.operator.source.isc.udl}
+    patterns:
+      - { include: '#value-expression' }
+      - { include: '#value-string' }
+      - { include: '#value-literal' }
+      - { include: '#type-name' }
   type-name: 
     comment: <class name>
-    match: (\s|%)([A-Za-z][A-Za-z0-9.]*)\b
+    match: (\b|%)([A-Za-z][A-Za-z0-9.]*)\b
     name: entity.name.type.source.isc.udl
   type-name-list:
-    begin: \s\(
     comment: (<type1>,<type2>)
+    begin: \s\(
     end: \)
     name: keyword.operator.source.isc.udl
     patterns:
