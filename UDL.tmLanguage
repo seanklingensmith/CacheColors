@@ -59,19 +59,11 @@
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#xdata-definition</string>
-				</dict>
-				<dict>
-					<key>include</key>
 					<string>#index-definition</string>
 				</dict>
 				<dict>
 					<key>include</key>
 					<string>#fk-definition</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#method-block</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -96,7 +88,7 @@
 		<key>block-cos</key>
 		<dict>
 			<key>begin</key>
-			<string>(?=\G\s+((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK|New|\$\$\$|#|;|//|/\*))</string>
+			<string>\{</string>
 			<key>comment</key>
 			<string>Cache ObjectScript block</string>
 			<key>end</key>
@@ -112,25 +104,25 @@
 		<key>block-js</key>
 		<dict>
 			<key>begin</key>
-			<string>^</string>
+			<string>\{</string>
 			<key>comment</key>
-			<string>is this a ClientMethod block?</string>
+			<string>Javascript method body</string>
 			<key>end</key>
 			<string>\}</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>include</key>
-					<string>source.js</string>
+					<string>#js</string>
 				</dict>
 			</array>
 		</dict>
 		<key>block-sql</key>
 		<dict>
 			<key>begin</key>
-			<string>\G\s*(?=((?i)SELECT|UPDATE|CREATE|DELETE|DROP|INSERT|ALTER))</string>
+			<string>\{</string>
 			<key>comment</key>
-			<string>is this a Query block?</string>
+			<string>SQL Query block</string>
 			<key>end</key>
 			<string>\}</string>
 			<key>patterns</key>
@@ -144,13 +136,17 @@
 		<key>block-xml</key>
 		<dict>
 			<key>begin</key>
-			<string>\G\s*(?=&lt;.*&gt;)</string>
+			<string>\{</string>
 			<key>comment</key>
 			<string>is this an XData block?</string>
 			<key>end</key>
 			<string>\}</string>
 			<key>patterns</key>
 			<array>
+				<dict>
+					<key>include</key>
+					<string>#xdata-style</string>
+				</dict>
 				<dict>
 					<key>include</key>
 					<string>text.xml</string>
@@ -191,6 +187,34 @@
 				</dict>
 			</array>
 		</dict>
+		<key>clientmethod-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>^\s*((?i)ClientMethod)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.source.isc.udl</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>ClientMethod Definition Line</string>
+			<key>end</key>
+			<string>(?&lt;=\})</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#generic-method-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#block-js</string>
+				</dict>
+			</array>
+		</dict>
 		<key>cos</key>
 		<dict>
 			<key>comment</key>
@@ -221,6 +245,34 @@
 			<string>placeholder for source.isc.cos</string>
 			<key>match</key>
 			<string>\b((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK)\b</string>
+		</dict>
+		<key>cosmethod-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>^\s*((?i)ClassMethod|Method|Trigger)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.source.isc.udl</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Method/ClassMethod Definition Line</string>
+			<key>end</key>
+			<string>(?&lt;=\})</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#generic-method-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#block-cos</string>
+				</dict>
+			</array>
 		</dict>
 		<key>field-comment</key>
 		<dict>
@@ -308,6 +360,38 @@
 			<key>match</key>
 			<string>(\%|\b)([A-Za-z0-9]*)\(([A-Za-z\%][A-Za-z0-9]*)\)</string>
 		</dict>
+		<key>generic-method-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>\G\s*([A-Za-z%][A-Za-z0-9]*)\s*</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.type.source.isc.udl</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Generic Method Definition Line (name, parameters, return type and attributes)</string>
+			<key>end</key>
+			<string>$</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#member-attr-list</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#method-parameter-list</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#keyword-as</string>
+				</dict>
+			</array>
+		</dict>
 		<key>include-directive</key>
 		<dict>
 			<key>begin</key>
@@ -379,6 +463,24 @@
 		<dict>
 			<key>comment</key>
 			<false/>
+		</dict>
+		<key>js</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#block-js</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>source.js</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>$self</string>
+				</dict>
+			</array>
 		</dict>
 		<key>keyword-as</key>
 		<dict>
@@ -644,37 +746,23 @@
 		</dict>
 		<key>method-definition</key>
 		<dict>
-			<key>begin</key>
-			<string>^\s*((?i)Method|Trigger|ClassMethod|ClientMethod|Query)\b</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>storage.type.source.isc.udl</string>
-				</dict>
-			</dict>
-			<key>comment</key>
-			<string>Method Definition Line</string>
-			<key>end</key>
-			<string>$</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>include</key>
-					<string>#member-attr-list</string>
+					<string>#query-definition</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#method-parameter-list</string>
+					<string>#clientmethod-definition</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#keyword-as</string>
+					<string>#cosmethod-definition</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#member-name</string>
+					<string>#xdata-definition</string>
 				</dict>
 			</array>
 		</dict>
@@ -847,6 +935,34 @@
 				</dict>
 			</array>
 		</dict>
+		<key>query-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>^\s*((?i)Query)\b</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.source.isc.udl</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Query Definition Line</string>
+			<key>end</key>
+			<string>(?&lt;=\})</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#generic-method-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#block-sql</string>
+				</dict>
+			</array>
+		</dict>
 		<key>type-attr</key>
 		<dict>
 			<key>begin</key>
@@ -967,14 +1083,35 @@
 					<key>name</key>
 					<string>storage.type.source.isc.udl</string>
 				</dict>
-				<key>2</key>
+			</dict>
+			<key>comment</key>
+			<string>ClientMethod Definition Line</string>
+			<key>end</key>
+			<string>(?&lt;=\})</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#xdata-definition-line</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#block-xml</string>
+				</dict>
+			</array>
+		</dict>
+		<key>xdata-definition-line</key>
+		<dict>
+			<key>begin</key>
+			<string>\G\s*([A-Za-z%][A-Za-z0-9]*)\s*</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
 				<dict>
 					<key>name</key>
 					<string>entity.name.type.source.isc.udl</string>
 				</dict>
 			</dict>
-			<key>comment</key>
-			<string>XData Definition Line</string>
 			<key>end</key>
 			<string>$</string>
 			<key>patterns</key>
@@ -983,9 +1120,21 @@
 					<key>include</key>
 					<string>#member-attr-list</string>
 				</dict>
+			</array>
+		</dict>
+		<key>xdata-style</key>
+		<dict>
+			<key>begin</key>
+			<string>(?&lt;=\&lt;style type=\"text/css\"\&gt;)</string>
+			<key>comment</key>
+			<string>XData Style block for inline ZEN CSS</string>
+			<key>end</key>
+			<string>(?=\&lt;/style\&gt;)</string>
+			<key>patterns</key>
+			<array>
 				<dict>
 					<key>include</key>
-					<string>#member-name</string>
+					<string>source.css</string>
 				</dict>
 			</array>
 		</dict>

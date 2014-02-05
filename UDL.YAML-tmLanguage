@@ -1,6 +1,5 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 
-# TODO: Rework block identification
 # TODO: coloring for method paramters? 
 # TODO: Review syntax categories
 # TODO: enforce order correctly?
@@ -23,10 +22,8 @@ patterns:
   - {include: '#property-definition'}
   - {include: '#parameter-definition'}
   - {include: '#method-definition'}
-  - {include: '#xdata-definition'}
   - {include: '#index-definition'}
   - {include: '#fk-definition'}
-  - {include: '#method-block'}
   - {include: text.xml}
 repository:
   block-comment: 
@@ -35,29 +32,42 @@ repository:
     end: \*/
     name: comment.block.source.isc.udl}
   block-cos:
-    begin: (?=\G\s+((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK|New|\$\$\$|#|;|//|/\*))
     comment: Cache ObjectScript block
+    begin: \{
     end: \}
     patterns:
     - {include: '#cos'}
   block-js:
-    begin: ^
-    comment: is this a ClientMethod block?
+    comment: Javascript method body
+    begin: \{
     end: \}
     patterns:
+    - {include: '#js'}
+  js:
+    patterns:
+    - {include: '#block-js'}
     - {include: source.js}
+    - {include: $self}
   block-sql:
-    begin: \G\s*(?=((?i)SELECT|UPDATE|CREATE|DELETE|DROP|INSERT|ALTER))
-    comment: is this a Query block?
+    comment: SQL Query block
+    begin: \{
     end: \}
     patterns:
     - {include: source.sql}
   block-xml:
-    begin: \G\s*(?=<.*>)
     comment: is this an XData block?
+    begin: \{
     end: \}
+    #name: invalid.illegal.source.isc.udl
     patterns:
+    - {include: '#xdata-style'}
     - {include: text.xml}
+  xdata-style:
+    comment: XData Style block for inline ZEN CSS
+    begin: (?<=\<style type=\"text/css\"\>)
+    end: (?=\</style\>)
+    patterns:
+    - {include: source.css}
   class-definition:
     comment: Class Definition Line
     begin: ^\s*((?i)Class)\b
@@ -221,16 +231,67 @@ repository:
     - {include: '#block-cos'}
     - {include: '#block-js'}
   method-definition:
-    begin: ^\s*((?i)Method|Trigger|ClassMethod|ClientMethod|Query)\b
+    patterns:
+    - {include: '#query-definition'}
+    - {include: '#clientmethod-definition'}
+    - {include: '#cosmethod-definition'}
+    - {include: '#xdata-definition'}
+  clientmethod-definition:
+    comment: ClientMethod Definition Line
+    begin: ^\s*((?i)ClientMethod)\b
+    end: (?<=\})
     beginCaptures:
       '1': {name: storage.type.source.isc.udl}
-    comment: Method Definition Line
+    patterns:
+    - {include: '#generic-method-definition'}
+    - {include: '#block-js'}
+  query-definition:
+    comment: Query Definition Line
+    begin: ^\s*((?i)Query)\b
+    end: (?<=\})
+    beginCaptures:
+      '1': {name: storage.type.source.isc.udl}
+    patterns:
+    - {include: '#generic-method-definition'}
+    - {include: '#block-sql'}
+  cosmethod-definition:
+    comment: Method/ClassMethod Definition Line
+    begin: ^\s*((?i)ClassMethod|Method|Trigger)\b
+    end: (?<=\})
+    beginCaptures:
+      '1': {name: storage.type.source.isc.udl}
+    patterns:
+    - {include: '#generic-method-definition'}
+    - {include: '#block-cos'}
+  xdata-definition:
+    comment: ClientMethod Definition Line
+    begin: ^\s*((?i)XData)\b
+    end: (?<=\})
+    beginCaptures:
+      '1': {name: storage.type.source.isc.udl}
+    patterns:
+    - {include: '#xdata-definition-line'}
+    - {include: '#block-xml'}
+  xdata-definition-line:
+    begin: \G\s*([A-Za-z%][A-Za-z0-9]*)\s*
     end: $
+    beginCaptures:
+      '1': {name: entity.name.type.source.isc.udl}
+    patterns:
+    - {include: '#member-attr-list'}
+
+  generic-method-definition:
+    comment: Generic Method Definition Line (name, parameters, return type and attributes)
+    #begin: ^\s*((?i)Method|Trigger|ClassMethod|ClientMethod|Query)\b
+    begin: \G\s*([A-Za-z%][A-Za-z0-9]*)\s*
+    end: $
+    beginCaptures:
+      '1': {name: entity.name.type.source.isc.udl}
     patterns:
     - {include: '#member-attr-list'}
     - {include: '#method-parameter-list'}
     - {include: '#keyword-as'}
-    - {include: '#member-name'}
+    #- {include: '#member-name'}
   method-parameter:
     begin: (\(|\G)
     beginCaptures:
@@ -328,15 +389,6 @@ repository:
     comment: quoted string
     match: (\".*?\")+
     name: string.quoted.double.source.isc.udl
-  xdata-definition:
-    begin: ^\s*((?i)XData)\b
-    beginCaptures:
-      '1': {name: storage.type.source.isc.udl}
-      '2': {name: entity.name.type.source.isc.udl}
-    comment: XData Definition Line
-    end: $
-    patterns:
-    - {include: '#member-attr-list'}
-    - {include: '#member-name'}
+
 scopeName: source.source.isc.udl
 uuid: 12faaa2e-31d0-4e2c-8c31-a91770a45a8c
