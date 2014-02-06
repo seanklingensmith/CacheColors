@@ -20,6 +20,14 @@
 		</dict>
 		<dict>
 			<key>include</key>
+			<string>#line-comment</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#block-comment</string>
+		</dict>
+		<dict>
+			<key>include</key>
 			<string>#literal-number</string>
 		</dict>
 		<dict>
@@ -40,14 +48,6 @@
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#line-comment</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#block-comment</string>
-		</dict>
-		<dict>
-			<key>include</key>
 			<string>#macro</string>
 		</dict>
 		<dict>
@@ -61,6 +61,18 @@
 		<dict>
 			<key>include</key>
 			<string>#oref-dot-property</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#sql-block</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#html-block</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#js-block</string>
 		</dict>
 	</array>
 	<key>repository</key>
@@ -135,6 +147,66 @@
 			<key>name</key>
 			<string>entity.name.function.source.isc.cos</string>
 		</dict>
+		<key>html-block</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&amp;html\&lt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&gt;)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>text.html.basic</string>
+				</dict>
+			</array>
+		</dict>
+		<key>js-block</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&amp;js\&lt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&gt;)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.js</string>
+				</dict>
+			</array>
+		</dict>
 		<key>line-comment</key>
 		<dict>
 			<key>match</key>
@@ -180,6 +252,36 @@
 			</dict>
 			<key>match</key>
 			<string>((\.)|([A-Za-z%][A-Za-z0-9]*))(\.([A-Za-z%][A-Za-z0-9]*))+</string>
+		</dict>
+		<key>sql-block</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&amp;sql\()</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\))</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.sql</string>
+				</dict>
+			</array>
 		</dict>
 		<key>tag-definition</key>
 		<dict>

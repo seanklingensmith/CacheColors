@@ -1,10 +1,10 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 
-#TODO: .. and obj.property 
 #TODO: properly parse commands
-#TODO: what's up with comma separated numbers?
 #TODO: ^ globals and routines
-#TODO: 
+#TODO: &sql()
+#TODO: &js<>
+#TODO: &html<>
 
 ---
 name: "Caché ObjectScript"
@@ -15,17 +15,20 @@ uuid: cafbcfff-31b9-4df5-a059-cea3160291c5
 patterns:
 - {include: '#directive-include'}
 - {include: '#directive-define'}
+- {include: '#line-comment'}
+- {include: '#block-comment'}
 - {include: '#literal-number'}
 - {include: '#literal-string'}
 - {include: '#command'}
 - {include: '#control'}
 - {include: '#tag-definition'}
-- {include: '#line-comment'}
-- {include: '#block-comment'}
 - {include: '#macro'}
 - {include: '#tag-value'}
 - {include: '#function'}
 - {include: '#oref-dot-property'}
+- {include: '#sql-block'}
+- {include: '#html-block'}
+- {include: '#js-block'}
 
 repository:
   command:
@@ -78,6 +81,33 @@ repository:
     captures:
       '3': { name: variable.other.source.isc.cos }
       '5': { name: support.function.source.isc.cos }
+  sql-block:
+    begin: (\&sql\()
+    end: (\))
+    beginCaptures:
+     '1': {name: support.source.isc.cos}
+    endCaptures:
+     '1': {name: support.source.isc.cos}
+    patterns:
+    - {include: source.sql}
+  html-block:
+    begin: (\&html\<)
+    end: (\>)
+    beginCaptures:
+     '1': {name: support.source.isc.cos}
+    endCaptures:
+     '1': {name: support.source.isc.cos}
+    patterns:
+    - {include: text.html.basic}
+  js-block:
+    begin: (\&js\<)
+    end: (\>)
+    beginCaptures:
+     '1': {name: support.source.isc.cos}
+    endCaptures:
+     '1': {name: support.source.isc.cos}
+    patterns:
+    - {include: source.js}
 
 
 
