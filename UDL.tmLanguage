@@ -223,6 +223,10 @@
 			<array>
 				<dict>
 					<key>include</key>
+					<string>#block-cos</string>
+				</dict>
+				<dict>
+					<key>include</key>
 					<string>source.isc.cos</string>
 				</dict>
 				<dict>
@@ -230,21 +234,6 @@
 					<string>$self</string>
 				</dict>
 			</array>
-		</dict>
-		<key>cos-syntax</key>
-		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.control.source.isc.udl</string>
-				</dict>
-			</dict>
-			<key>comment</key>
-			<string>placeholder for source.isc.cos</string>
-			<key>match</key>
-			<string>\b((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK)\b</string>
 		</dict>
 		<key>cosmethod-definition</key>
 		<dict>

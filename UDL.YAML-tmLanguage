@@ -4,6 +4,7 @@
 # TODO: Review syntax categories
 # TODO: enforce order correctly?
 # TODO: color invalid syntax
+# TODO: Triggers aren't always (usually?) COS
 
 fileTypes: [cls]
 firstLineMatch: \s*((?i)Include|Class|///)
@@ -37,6 +38,12 @@ repository:
     end: \}
     patterns:
     - {include: '#cos'}
+  cos:
+    comment: COS syntax highlighting
+    patterns:
+    - {include: '#block-cos'}
+    - {include: source.isc.cos}
+    - {include: $self}
   block-js:
     comment: Javascript method body
     begin: \{
@@ -79,16 +86,7 @@ repository:
     - {include: '#keyword-extends'}
     - {include: '#member-attr-list'}
     - {include: '#type-name'}
-  cos:
-    comment: COS syntax highlighting
-    patterns:
-    - {include: source.isc.cos}
-    - {include: $self}
-  cos-syntax:
-    captures:
-      '1': {name: keyword.control.source.isc.udl}
-    comment: placeholder for source.isc.cos
-    match: \b((?i)SET|S|KILL|K|DO|D|GOTO|G|WRITE|W|READ|R|OPEN|O|USE|U|IF|I|ELSE|E|WHILE|FOR|F|CONTINUE|QUIT|Q|HALT|H|XECUTE|X|ZWRITE|ZW|ZZDUMP|ZKILL|ZK)\b
+  
   field-comment: 
     comment: Field comments (triple slash)
     match: ^\s*///.*$
