@@ -197,7 +197,7 @@ repository:
       patterns:
       - {include: '#value-string'}
       - {include: '#value-literal'}
-      - {include: '#value-expression'}
+      - {include: '#sql-expression'}
       - {match: '[A-Za-z_][A-Za-z0-9_]+', name: entity.type.name.source.isc.udl}
     - comment: attr name
       match: \b[A-Za-z][A-Za-z0-9 ]+\b
@@ -372,10 +372,23 @@ repository:
     - {include: '#type-name'}
 
   #TODO: actually implement coloring of expressions
+  sql-expression: 
+    comment: 'SQLComputeCode, RetrievalCode, etc.'
+    begin: \{
+    end: \}
+    patterns:
+    - match: \{\s*([A-Za-z_%][A-Za-z0-9_]*)\s*\}
+      captures: 
+       '1': {name: variable.source.isc.udl}
+    - {include: '#cos'}
+    #- {include: $self}
+  
   value-expression: 
     comment: '{<expression>}'
-    match: \{.*\}
-    name: invalid.illegal.source.isc.udl
+    begin: \{
+    end: \}
+    patterns:
+    - {include: '#cos'}
 
   #TODO: scientific notation? Other "non-standard" formats?
   value-literal: 

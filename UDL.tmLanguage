@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>fileTypes</key>
@@ -640,7 +640,7 @@
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>#value-expression</string>
+							<string>#sql-expression</string>
 						</dict>
 						<dict>
 							<key>match</key>
@@ -952,6 +952,34 @@
 				</dict>
 			</array>
 		</dict>
+		<key>sql-expression</key>
+		<dict>
+			<key>begin</key>
+			<string>\{</string>
+			<key>comment</key>
+			<string>SQLComputeCode, RetrievalCode, etc.</string>
+			<key>end</key>
+			<string>\}</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>variable.source.isc.udl</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>\{\s*([A-Za-z_%][A-Za-z0-9_]*)\s*\}</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#cos</string>
+				</dict>
+			</array>
+		</dict>
 		<key>type-attr</key>
 		<dict>
 			<key>begin</key>
@@ -1036,12 +1064,19 @@
 		</dict>
 		<key>value-expression</key>
 		<dict>
+			<key>begin</key>
+			<string>\{</string>
 			<key>comment</key>
 			<string>{&lt;expression&gt;}</string>
-			<key>match</key>
-			<string>\{.*\}</string>
-			<key>name</key>
-			<string>invalid.illegal.source.isc.udl</string>
+			<key>end</key>
+			<string>\}</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#cos</string>
+				</dict>
+			</array>
 		</dict>
 		<key>value-literal</key>
 		<dict>
