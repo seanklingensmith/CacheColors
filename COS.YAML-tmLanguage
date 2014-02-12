@@ -13,31 +13,109 @@ fileTypes: [rtn]
 uuid: cafbcfff-31b9-4df5-a059-cea3160291c5
 
 patterns:
-- {include: '#directive-include'}
-- {include: '#directive-define'}
-- {include: '#line-comment'}
-- {include: '#block-comment'}
-- {include: '#literal-number'}
-- {include: '#literal-string'}
+
 - {include: '#command'}
-- {include: '#control'}
-- {include: '#tag-definition'}
-- {include: '#macro'}
-- {include: '#tag-value'}
-- {include: '#function'}
-- {include: '#oref-dot-property'}
-- {include: '#sql-block'}
-- {include: '#html-block'}
-- {include: '#js-block'}
+- {include: '#set-expression'}
+- {include: '#preprocessor'}
+- {include: '#comment'}
+- {include: '#block-sql'}
+- {include: '#block-html'}
+- {include: '#block-js'}
+- {include: '#old'}
 
 repository:
   command:
-    comment: <command>
-    match: (?<=\s)((?i)SET|S|DO|D|KILL|K|GOTO|G|READ|R|WRITE|W|OPEN|O|USE|U|CLOSE|C|CONTINUE|FOR|F|HALT|HANG|H|JOB|J|LOCK|L|MERGE|M|NEW|N|QUIT|Q|RETURN|RET|TSTART|TS|TCOMMIT|TC|TROLLBACK|TR|THROW|VIEW|V|XECUTE|X|ZKILL|ZK|ZNSPACE|ZN|ZTRAP|ZWRITE|ZW|ZZDUMP|ZZWRITE)(?=\s)
-    name: keyword.operator.source.isc.cos
-  control:
-    match: (?<=2)((?i)IF|I|WHILE|FOR|F|TRY|CATCH|ELSE|E|ELSEIF)(?=\s)
-    name: keyword.control.source.isc.cos
+    patterns:
+    - {include: '#command-set'}
+    - {include: '#command-kill'}
+  command-kill:
+    patterns:
+    - {include: '#command-kill-noargs'}
+    - {include: '#command-kill-paren-list'}
+    - {include: '#command-kill-var-list'}
+  command-kill-noargs:
+    match: \s+((?i)KILL|K)((\s(?=\s))|(\s*$))
+    captures:
+      '1': {name: keyword.operator.source.isc.cos}
+  command-kill-paren-list:
+    begin: \s+((?i)KILL|K)\s(?=\()
+    end: (?<=\))
+    beginCaptures: 
+     '1': {name: keyword.operator.source.isc.cos}
+    patterns:
+    - {include: '#lvar-list'}
+  command-kill-var-list:
+    begin: \s+((?i)KILL|K)\s(?!\s)
+    end: \s$
+    beginCaptures:
+      '1': {name: keyword.operator.source.isc.cos}
+    patterns:
+    - {include: '#command'}
+    - {include: '#lvar-or-lvar-list'}
+  command-set:
+    begin: \s+((?i)SET|S)\s
+    end: $
+    beginCaptures: 
+      '1': {name: keyword.operator.source.isc.cos}
+    patterns:
+    #- {include: '#command'}
+    - {include: '#set-expression'}
+    - {include: '#lvar-or-lvar-list'}
+  lvar-or-lvar-list:
+    begin: \G
+    end: \s*(?=(=)|\s)|$
+    #endCaptures:
+    #  '1': {name: keyword.control.source.isc.cos}
+    patterns:
+    - {include: '#lvar-list'}
+    - {include: '#lvar'}
+  lvar-list:
+    begin: \G\(\s*
+    end: \s*\)
+    patterns:
+    - {include: '#lvar-list-item'}
+  lvar-list-item:
+    begin: (?<=\()|,
+    end: (?=\)|,)
+    patterns:
+    - {include: '#lvar'}
+  lvar:
+    patterns:
+    #- {include: '#global'}
+    - {include: '#variable'}
+    #- {include: '#property'}
+    #-{inclide: '#lvar-function'}
+  variable:
+    match: \^?([A-Za-z%][A-Za-z0-9]*)
+    name: variable.language.source.isc.cos
+  global: 
+    match: \^([A-Za-z%][A-Za-z0-9]*)
+    name: variable.language.source.isc.cos
+  
+  set-expression:
+    begin: (=)\s*
+    end: $
+    beginCaptures:
+      '1': {name: keyword.operator.source.isc}
+    patterns:
+    #- {include: '#command'}
+    - {include: $base}
+    - {include: '#value-string'}
+    - {include: '#value-numeric'}
+    - {include: '#variable'}
+  value-numeric:
+    #match: ([0-9])*.?([0-9])+
+    match: ([0-9]*.?[0-9]+)
+    name: constant.numeric.source.isc.cos
+  value-string:
+    match: \".*?\"
+    name: string.quoted.source.isc.cos
+
+  ###### Preprocessor
+  preprocessor:
+    patterns:
+    - {include: '#directive-include'}
+    - {include: '#directive-define'}
   directive-include:
     match: ^\s+((?i)#include)\s+([A-Za-z][A-Za-z0-9]*)\s+
     captures: 
@@ -48,6 +126,69 @@ repository:
     captures:
       '1': {name: keyword.control.source.isc.cos}
       '2': {name: keyword.other.source.isc.cos}
+
+  ##### Comments
+  comment:
+    patterns:
+    - {include: '#line-comment'}
+    - {include: "#block-comment"}
+  line-comment:
+    match: \s(//|;).*$
+    name: comment.line.source.isc.cos
+  block-comment:
+    begin: \s/\*
+    end: \*/
+    name: comment.block.source.isc.cos
+
+  ##### Language blocks
+  block-sql:
+    begin: (\&sql\()
+    end: (\))
+    beginCaptures:
+     '1': {name: support.source.isc.cos}
+    endCaptures:
+     '1': {name: support.source.isc.cos}
+    patterns:
+    - {include: source.sql}
+  block-html:
+    begin: (\&html\<)
+    end: (\>)
+    beginCaptures:
+     '1': {name: support.source.isc.cos}
+    endCaptures:
+     '1': {name: support.source.isc.cos}
+    patterns:
+    - {include: text.html.basic}
+  block-js:
+    begin: (\&js\<)
+    end: (\>)
+    beginCaptures:
+     '1': {name: support.source.isc.cos}
+    endCaptures:
+     '1': {name: support.source.isc.cos}
+    patterns:
+    - {include: source.js}
+
+#### Old definitions: in the process of refactoring
+  old:
+    patterns:
+    - {include: '#old-command'}
+    - {include: '#control'} 
+    - {include: '#function'}
+    - {include: '#tag-definition'}
+    - {include: '#tag-value'}
+    - {include: '#macro'}
+    - {include: '#keyword-class'}
+    - {include: '#oref-dot-property'}
+    - {include: '#literal-number'}
+    - {include: '#literal-string'}
+  old-command:
+    comment: <command>
+    match: (?<=\s)((?i)SET|S|DO|D|KILL|K|GOTO|G|READ|R|WRITE|W|OPEN|O|USE|U|CLOSE|C|CONTINUE|FOR|F|HALT|HANG|H|JOB|J|LOCK|L|MERGE|M|NEW|N|QUIT|Q|RETURN|RET|TSTART|TS|TCOMMIT|TC|TROLLBACK|TR|THROW|VIEW|V|XECUTE|X|ZKILL|ZK|ZNSPACE|ZN|ZTRAP|ZWRITE|ZW|ZZDUMP|ZZWRITE)(?=\s)
+    name: keyword.operator.source.isc.cos
+  control:
+    match: (?<=\s)((?i)IF|I|WHILE|FOR|F|TRY|CATCH|ELSE|E|ELSEIF)(?=\s)
+    name: keyword.control.source.isc.cos
   function: 
     comment: $function
     match: (\$[A-Za-z]+)\b
@@ -60,13 +201,6 @@ repository:
     captures: 
       '1': { name: entity.name.tag.source.isc.cos}
       '2': { name: entity.name.section.source.isc.cos}
-  line-comment:
-    match: \s(//|#|;).*$
-    name: comment.line.source.isc.cos
-  block-comment:
-    begin: \s/\*
-    end: \*/
-    name: comment.block.source.isc.cos
   macro:
     match: (\$\$\$[A-Za-z][A-Za-z0-9]*)(\(.*\))?
     name: keyword.other.source.isc.cos
@@ -81,33 +215,14 @@ repository:
     captures:
       '3': { name: variable.other.source.isc.cos }
       '5': { name: support.function.source.isc.cos }
-  sql-block:
-    begin: (\&sql\()
-    end: (\))
-    beginCaptures:
-     '1': {name: support.source.isc.cos}
-    endCaptures:
-     '1': {name: support.source.isc.cos}
-    patterns:
-    - {include: source.sql}
-  html-block:
-    begin: (\&html\<)
-    end: (\>)
-    beginCaptures:
-     '1': {name: support.source.isc.cos}
-    endCaptures:
-     '1': {name: support.source.isc.cos}
-    patterns:
-    - {include: text.html.basic}
-  js-block:
-    begin: (\&js\<)
-    end: (\>)
-    beginCaptures:
-     '1': {name: support.source.isc.cos}
-    endCaptures:
-     '1': {name: support.source.isc.cos}
-    patterns:
-    - {include: source.js}
+  keyword-class:
+    match: (##(?i)CLASS)(\()(([A-Za-z%][A-Za-z0-9]*)(\.[A-Za-z%][A-Za-z0-9]*)*)(\))
+    captures:
+     '1': {name: support.class.source.isc.cos}
+     '3': {name: variable.language.source.isc.cos}
+
+
+
 
 
 

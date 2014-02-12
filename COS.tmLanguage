@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>fileTypes</key>
@@ -12,67 +12,35 @@
 	<array>
 		<dict>
 			<key>include</key>
-			<string>#directive-include</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#directive-define</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#line-comment</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#block-comment</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#literal-number</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#literal-string</string>
-		</dict>
-		<dict>
-			<key>include</key>
 			<string>#command</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#control</string>
+			<string>#set-expression</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#tag-definition</string>
+			<string>#preprocessor</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#macro</string>
+			<string>#comment</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#tag-value</string>
+			<string>#block-sql</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#function</string>
+			<string>#block-html</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#oref-dot-property</string>
+			<string>#block-js</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#sql-block</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#html-block</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#js-block</string>
+			<string>#old</string>
 		</dict>
 	</array>
 	<key>repository</key>
@@ -86,19 +54,233 @@
 			<key>name</key>
 			<string>comment.block.source.isc.cos</string>
 		</dict>
+		<key>block-html</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&amp;html\&lt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&gt;)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>text.html.basic</string>
+				</dict>
+			</array>
+		</dict>
+		<key>block-js</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&amp;js\&lt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&gt;)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.js</string>
+				</dict>
+			</array>
+		</dict>
+		<key>block-sql</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&amp;sql\()</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\))</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>support.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.sql</string>
+				</dict>
+			</array>
+		</dict>
 		<key>command</key>
 		<dict>
-			<key>comment</key>
-			<string>&lt;command&gt;</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#command-set</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#command-kill</string>
+				</dict>
+			</array>
+		</dict>
+		<key>command-kill</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#command-kill-noargs</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#command-kill-paren-list</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#command-kill-var-list</string>
+				</dict>
+			</array>
+		</dict>
+		<key>command-kill-noargs</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.cos</string>
+				</dict>
+			</dict>
 			<key>match</key>
-			<string>(?&lt;=\s)((?i)SET|S|DO|D|KILL|K|GOTO|G|READ|R|WRITE|W|OPEN|O|USE|U|CLOSE|C|CONTINUE|FOR|F|HALT|HANG|H|JOB|J|LOCK|L|MERGE|M|NEW|N|QUIT|Q|RETURN|RET|TSTART|TS|TCOMMIT|TC|TROLLBACK|TR|THROW|VIEW|V|XECUTE|X|ZKILL|ZK|ZNSPACE|ZN|ZTRAP|ZWRITE|ZW|ZZDUMP|ZZWRITE)(?=\s)</string>
-			<key>name</key>
-			<string>keyword.operator.source.isc.cos</string>
+			<string>\s+((?i)KILL|K)((\s(?=\s))|(\s*$))</string>
+		</dict>
+		<key>command-kill-paren-list</key>
+		<dict>
+			<key>begin</key>
+			<string>\s+((?i)KILL|K)\s(?=\()</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(?&lt;=\))</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#lvar-list</string>
+				</dict>
+			</array>
+		</dict>
+		<key>command-kill-var-list</key>
+		<dict>
+			<key>begin</key>
+			<string>\s+((?i)KILL|K)\s(?!\s)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>\s$</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#command</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#lvar-or-lvar-list</string>
+				</dict>
+			</array>
+		</dict>
+		<key>command-set</key>
+		<dict>
+			<key>begin</key>
+			<string>\s+((?i)SET|S)\s</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.operator.source.isc.cos</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>$</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#set-expression</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#lvar-or-lvar-list</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comment</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#line-comment</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#block-comment</string>
+				</dict>
+			</array>
 		</dict>
 		<key>control</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;=2)((?i)IF|I|WHILE|FOR|F|TRY|CATCH|ELSE|E|ELSEIF)(?=\s)</string>
+			<string>(?&lt;=\s)((?i)IF|I|WHILE|FOR|F|TRY|CATCH|ELSE|E|ELSEIF)(?=\s)</string>
 			<key>name</key>
 			<string>keyword.control.source.isc.cos</string>
 		</dict>
@@ -147,70 +329,35 @@
 			<key>name</key>
 			<string>entity.name.function.source.isc.cos</string>
 		</dict>
-		<key>html-block</key>
+		<key>global</key>
 		<dict>
-			<key>begin</key>
-			<string>(\&amp;html\&lt;)</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>support.source.isc.cos</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>(\&gt;)</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>support.source.isc.cos</string>
-				</dict>
-			</dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>text.html.basic</string>
-				</dict>
-			</array>
+			<key>match</key>
+			<string>\^([A-Za-z%][A-Za-z0-9]*)</string>
+			<key>name</key>
+			<string>variable.language.source.isc.cos</string>
 		</dict>
-		<key>js-block</key>
+		<key>keyword-class</key>
 		<dict>
-			<key>begin</key>
-			<string>(\&amp;js\&lt;)</string>
-			<key>beginCaptures</key>
+			<key>captures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>support.source.isc.cos</string>
+					<string>support.class.source.isc.cos</string>
 				</dict>
-			</dict>
-			<key>end</key>
-			<string>(\&gt;)</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
+				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>support.source.isc.cos</string>
+					<string>variable.language.source.isc.cos</string>
 				</dict>
 			</dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>source.js</string>
-				</dict>
-			</array>
+			<key>match</key>
+			<string>(##(?i)CLASS)(\()(([A-Za-z%][A-Za-z0-9]*)(\.[A-Za-z%][A-Za-z0-9]*)*)(\))</string>
 		</dict>
 		<key>line-comment</key>
 		<dict>
 			<key>match</key>
-			<string>\s(//|#|;).*$</string>
+			<string>\s(//|;).*$</string>
 			<key>name</key>
 			<string>comment.line.source.isc.cos</string>
 		</dict>
@@ -228,12 +375,123 @@
 			<key>name</key>
 			<string>string.quoted.double.source.isc.cos</string>
 		</dict>
+		<key>lvar</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#variable</string>
+				</dict>
+			</array>
+		</dict>
+		<key>lvar-list</key>
+		<dict>
+			<key>begin</key>
+			<string>\G\(\s*</string>
+			<key>end</key>
+			<string>\s*\)</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#lvar-list-item</string>
+				</dict>
+			</array>
+		</dict>
+		<key>lvar-list-item</key>
+		<dict>
+			<key>begin</key>
+			<string>(?&lt;=\()|,</string>
+			<key>end</key>
+			<string>(?=\)|,)</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#lvar</string>
+				</dict>
+			</array>
+		</dict>
+		<key>lvar-or-lvar-list</key>
+		<dict>
+			<key>begin</key>
+			<string>\G</string>
+			<key>end</key>
+			<string>\s*(?=(=)|\s)|$</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#lvar-list</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#lvar</string>
+				</dict>
+			</array>
+		</dict>
 		<key>macro</key>
 		<dict>
 			<key>match</key>
 			<string>(\$\$\$[A-Za-z][A-Za-z0-9]*)(\(.*\))?</string>
 			<key>name</key>
 			<string>keyword.other.source.isc.cos</string>
+		</dict>
+		<key>old</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#old-command</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#control</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#function</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tag-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tag-value</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#macro</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#keyword-class</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#oref-dot-property</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#literal-number</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#literal-string</string>
+				</dict>
+			</array>
+		</dict>
+		<key>old-command</key>
+		<dict>
+			<key>comment</key>
+			<string>&lt;command&gt;</string>
+			<key>match</key>
+			<string>(?&lt;=\s)((?i)SET|S|DO|D|KILL|K|GOTO|G|READ|R|WRITE|W|OPEN|O|USE|U|CLOSE|C|CONTINUE|FOR|F|HALT|HANG|H|JOB|J|LOCK|L|MERGE|M|NEW|N|QUIT|Q|RETURN|RET|TSTART|TS|TCOMMIT|TC|TROLLBACK|TR|THROW|VIEW|V|XECUTE|X|ZKILL|ZK|ZNSPACE|ZN|ZTRAP|ZWRITE|ZW|ZZDUMP|ZZWRITE)(?=\s)</string>
+			<key>name</key>
+			<string>keyword.operator.source.isc.cos</string>
 		</dict>
 		<key>oref-dot-property</key>
 		<dict>
@@ -253,33 +511,51 @@
 			<key>match</key>
 			<string>((\.)|([A-Za-z%][A-Za-z0-9]*))(\.([A-Za-z%][A-Za-z0-9]*))+</string>
 		</dict>
-		<key>sql-block</key>
+		<key>preprocessor</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#directive-include</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#directive-define</string>
+				</dict>
+			</array>
+		</dict>
+		<key>set-expression</key>
 		<dict>
 			<key>begin</key>
-			<string>(\&amp;sql\()</string>
+			<string>(=)\s*</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>support.source.isc.cos</string>
+					<string>keyword.operator.source.isc</string>
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(\))</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>support.source.isc.cos</string>
-				</dict>
-			</dict>
+			<string>$</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>include</key>
-					<string>source.sql</string>
+					<string>$base</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#value-string</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#value-numeric</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#variable</string>
 				</dict>
 			</array>
 		</dict>
@@ -307,6 +583,27 @@
 			</dict>
 			<key>match</key>
 			<string>(\$\$[A-Za-z%][A-Za-z0-9]*)(\^[A-Za-z%][A-Za-z0-9.]*)?</string>
+		</dict>
+		<key>value-numeric</key>
+		<dict>
+			<key>match</key>
+			<string>([0-9]*.?[0-9]+)</string>
+			<key>name</key>
+			<string>constant.numeric.source.isc.cos</string>
+		</dict>
+		<key>value-string</key>
+		<dict>
+			<key>match</key>
+			<string>\".*?\"</string>
+			<key>name</key>
+			<string>string.quoted.source.isc.cos</string>
+		</dict>
+		<key>variable</key>
+		<dict>
+			<key>match</key>
+			<string>\^?([A-Za-z%][A-Za-z0-9]*)</string>
+			<key>name</key>
+			<string>variable.language.source.isc.cos</string>
 		</dict>
 	</dict>
 	<key>scopeName</key>
