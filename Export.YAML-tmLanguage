@@ -1,0 +1,91 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Export
+scopeName: source.iscexport
+fileTypes: [iscexport]
+uuid: c3ffa455-1218-4e6f-877f-e6a234279d76
+
+patterns:
+- {include: '#cos-block'}
+- {include: '#description'}
+- {include: '#sqlquery'}
+- {include: '#prolog'}
+- {include: '#any-tag'}
+
+repository:
+  prolog: 
+    begin: \<\?
+    end: \?\>
+    name: comment.line.source.iscexport
+  any-tag:
+    patterns:
+    - {include: '#start-tag'}
+    - {include: '#end-tag'}
+  start-tag:
+    begin: (\<)([A-Za-z0-9]+) 
+    end: (\>)
+    beginCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+    endCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+    patterns:
+    - {include: '#any-attr'}
+  end-tag:
+    match: (\</)([A-Za-z0-9]+)(\>)
+    captures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+      '3': {name: keyword.operator.source.iscexport}
+  any-attr:
+    match: ([A-Za-z0-9]+)\s*(=)\s*(\".*?\")
+    captures: 
+      '1': {name: entity.name.source.iscexport}
+      '2': {name: keyword.operator.source.iscexport}
+      '3': {name: string.quoted.source.iscexport}
+  description:
+    begin: (\<)(Description)(\>)
+    end: (\</)(Description)(\>)
+    beginCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+      '3': {name: keyword.operator.source.iscexport}
+    endCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+      '3': {name: keyword.operator.source.iscexport}
+    name: comment.block.documentation.source.iscexport
+  cos-block:
+    begin: (\<)(Routine|Implementation).*?(\>)
+    end: (\</)(Routine|Implementation)(\>)
+    beginCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+      '3': {name: keyword.operator.source.iscexport}
+    endCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+      '3': {name: keyword.operator.source.iscexport}
+    patterns:
+    - begin: (\<\!\[CDATA\[)
+      end: (\]\]\>)
+      beginCaptures:
+        '1': {name: comment.line.source.iscexport}
+      endCaptures:
+        '1': {name: comment.line.source.iscexport}
+      patterns:
+      - {include: source.isc.cos}
+  sqlquery:
+    begin: (\<)(SqlQuery)(\>)
+    end: (\</)(SqlQuery)(\>)
+    beginCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+      '3': {name: keyword.operator.source.iscexport}
+    endCaptures:
+      '1': {name: keyword.operator.source.iscexport}
+      '2': {name: storage.type.source.iscexport}
+      '3': {name: keyword.operator.source.iscexport}
+    patterns:
+    - {include: source.isc.cos}
+...
