@@ -12,23 +12,15 @@
 	<array>
 		<dict>
 			<key>include</key>
-			<string>#cos-block</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#description</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#sqlquery</string>
-		</dict>
-		<dict>
-			<key>include</key>
 			<string>#prolog</string>
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#any-tag</string>
+			<string>#export-definition</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#field-definition</string>
 		</dict>
 	</array>
 	<key>repository</key>
@@ -69,6 +61,80 @@
 					<string>#end-tag</string>
 				</dict>
 			</array>
+		</dict>
+		<key>cdata-comment</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;\!\[CDATA\[)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.line.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\]\]\&gt;)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.line.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#comment</string>
+				</dict>
+			</array>
+		</dict>
+		<key>class-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Class)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Class)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#udltext</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#field-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comment</key>
+		<dict>
+			<key>match</key>
+			<string>.</string>
+			<key>name</key>
+			<string>string.source.iscexport</string>
 		</dict>
 		<key>cos-block</key>
 		<dict>
@@ -154,17 +220,17 @@
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 				<key>2</key>
 				<dict>
 					<key>name</key>
-					<string>storage.type.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 			</dict>
 			<key>end</key>
@@ -174,21 +240,53 @@
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 				<key>2</key>
 				<dict>
 					<key>name</key>
-					<string>storage.type.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 			</dict>
-			<key>name</key>
-			<string>comment.block.documentation.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#cdata-comment</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#comment</string>
+				</dict>
+			</array>
+		</dict>
+		<key>end-export</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.source.iscexport</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>comment.source.iscexport</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>comment.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(\&lt;/)(Export)(\&gt;)</string>
 		</dict>
 		<key>end-tag</key>
 		<dict>
@@ -197,21 +295,254 @@
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 				<key>2</key>
 				<dict>
 					<key>name</key>
-					<string>storage.type.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 			</dict>
 			<key>match</key>
 			<string>(\&lt;/)([A-Za-z0-9]+)(\&gt;)</string>
+		</dict>
+		<key>export-definition</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#start-export</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#end-export</string>
+				</dict>
+			</array>
+		</dict>
+		<key>field-contents</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#cos-block</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#sqlquery</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#description</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#any-tag</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>.</string>
+					<key>name</key>
+					<string>variable.language.source.iscexport</string>
+				</dict>
+			</array>
+		</dict>
+		<key>field-definition</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#class-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#projection-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#parameter-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#property-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#index-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#fk-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#trigger-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#method-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#query-definition</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#storage-definition</string>
+				</dict>
+			</array>
+		</dict>
+		<key>fk-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(ForeignKey)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(ForeignKey)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
+		</dict>
+		<key>index-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Index)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Index)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
+		</dict>
+		<key>method-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Method)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Method)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
+		</dict>
+		<key>parameter-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Parameter)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Parameter)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
+		</dict>
+		<key>projection-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Projection)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Projection)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
 		</dict>
 		<key>prolog</key>
 		<dict>
@@ -221,6 +552,64 @@
 			<string>\?\&gt;</string>
 			<key>name</key>
 			<string>comment.line.source.iscexport</string>
+		</dict>
+		<key>property-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Property)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Property)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
+		</dict>
+		<key>query-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Query)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Query)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
 		</dict>
 		<key>sqlquery</key>
 		<dict>
@@ -272,21 +661,21 @@
 				</dict>
 			</array>
 		</dict>
-		<key>start-tag</key>
+		<key>start-export</key>
 		<dict>
 			<key>begin</key>
-			<string>(\&lt;)([A-Za-z0-9]+)</string>
+			<string>(\&lt;)(Export)</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 				<key>2</key>
 				<dict>
 					<key>name</key>
-					<string>storage.type.source.iscexport</string>
+					<string>entity.name.source.iscexport</string>
 				</dict>
 			</dict>
 			<key>end</key>
@@ -296,7 +685,7 @@
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.operator.source.iscexport</string>
+					<string>comment.source.iscexport</string>
 				</dict>
 			</dict>
 			<key>patterns</key>
@@ -304,6 +693,95 @@
 				<dict>
 					<key>include</key>
 					<string>#any-attr</string>
+				</dict>
+			</array>
+		</dict>
+		<key>start-tag</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)([A-Za-z0-9]+)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.source.iscexport</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&gt;)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>comment.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#any-attr</string>
+				</dict>
+			</array>
+		</dict>
+		<key>storage-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(Storage)\s*(name=\")(.*?)(\"\&gt;)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>support.class.source.iscexport</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>storage.source.iscexport</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(\&lt;/)(Storage)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#field-contents</string>
+				</dict>
+			</array>
+		</dict>
+		<key>udltext</key>
+		<dict>
+			<key>begin</key>
+			<string>(\&lt;)(UDLText)\s*(name)(=)(\".*?\")\s*(\&gt;)</string>
+			<key>end</key>
+			<string>(\&lt;/)(UDLText)(\&gt;)</string>
+			<key>name</key>
+			<string>comment.source.iscexport</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>(\&lt;)(Content)(\&gt;)</string>
+					<key>end</key>
+					<string>(\&lt;/)(Content)(\&gt;)</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#cdata-comment</string>
+						</dict>
+					</array>
 				</dict>
 			</array>
 		</dict>

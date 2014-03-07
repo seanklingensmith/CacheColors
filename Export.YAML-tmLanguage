@@ -6,17 +6,36 @@ fileTypes: [iscexport]
 uuid: c3ffa455-1218-4e6f-877f-e6a234279d76
 
 patterns:
-- {include: '#cos-block'}
-- {include: '#description'}
-- {include: '#sqlquery'}
 - {include: '#prolog'}
-- {include: '#any-tag'}
+- {include: '#export-definition'}
+- {include: '#field-definition'}
+#- {include: '#any-tag'}
 
 repository:
   prolog: 
     begin: \<\?
     end: \?\>
     name: comment.line.source.iscexport
+  export-definition:
+    patterns:
+    - {include: "#start-export"}
+    - {include: "#end-export"}
+  start-export:
+    begin: (\<)(Export) 
+    end: (\>)
+    beginCaptures:
+      '1': {name: comment.source.iscexport}
+      '2': {name: entity.name.source.iscexport}
+    endCaptures:
+      '1': {name: comment.source.iscexport}
+    patterns:
+    - {include: '#any-attr'}
+  end-export:
+    match: (\</)(Export)(\>)
+    captures:
+      '1': {name: comment.source.iscexport}
+      '2': {name: comment.source.iscexport}
+      '3': {name: comment.source.iscexport}
   any-tag:
     patterns:
     - {include: '#start-tag'}
@@ -25,18 +44,18 @@ repository:
     begin: (\<)([A-Za-z0-9]+) 
     end: (\>)
     beginCaptures:
-      '1': {name: keyword.operator.source.iscexport}
-      '2': {name: storage.type.source.iscexport}
+      '1': {name: comment.source.iscexport}
+      '2': {name: entity.name.source.iscexport}
     endCaptures:
-      '1': {name: keyword.operator.source.iscexport}
+      '1': {name: comment.source.iscexport}
     patterns:
     - {include: '#any-attr'}
   end-tag:
     match: (\</)([A-Za-z0-9]+)(\>)
     captures:
-      '1': {name: keyword.operator.source.iscexport}
-      '2': {name: storage.type.source.iscexport}
-      '3': {name: keyword.operator.source.iscexport}
+      '1': {name: comment.source.iscexport}
+      '2': {name: comment.source.iscexport}
+      '3': {name: comment.source.iscexport}
   any-attr:
     match: ([A-Za-z0-9]+)\s*(=)\s*(\".*?\")
     captures: 
@@ -47,14 +66,37 @@ repository:
     begin: (\<)(Description)(\>)
     end: (\</)(Description)(\>)
     beginCaptures:
-      '1': {name: keyword.operator.source.iscexport}
-      '2': {name: storage.type.source.iscexport}
-      '3': {name: keyword.operator.source.iscexport}
+      '1': {name: comment.source.iscexport}
+      '2': {name: comment.source.iscexport}
+      '3': {name: comment.source.iscexport}
     endCaptures:
-      '1': {name: keyword.operator.source.iscexport}
-      '2': {name: storage.type.source.iscexport}
-      '3': {name: keyword.operator.source.iscexport}
-    name: comment.block.documentation.source.iscexport
+      '1': {name: comment.source.iscexport}
+      '2': {name: comment.source.iscexport}
+      '3': {name: comment.source.iscexport}
+    patterns:
+    - {include: '#cdata-comment'}
+    - {include: '#comment'}
+  udltext:
+    begin: (\<)(UDLText)\s*(name)(=)(\".*?\")\s*(\>)
+    end: (\</)(UDLText)(\>)
+    name: comment.source.iscexport
+    patterns:
+    - begin: (\<)(Content)(\>)
+      end: (\</)(Content)(\>)
+      patterns:
+      - {include: '#cdata-comment'}
+  cdata-comment:
+    begin: (\<\!\[CDATA\[)
+    end: (\]\]\>)
+    beginCaptures:
+      '1': {name: comment.line.source.iscexport}
+    endCaptures:
+      '1': {name: comment.line.source.iscexport}
+    patterns:
+    - {include: '#comment'}
+  comment:
+    match: .
+    name: string.source.iscexport
   cos-block:
     begin: (\<)(Routine|Implementation).*?(\>)
     end: (\</)(Routine|Implementation)(\>)
@@ -88,4 +130,107 @@ repository:
       '3': {name: keyword.operator.source.iscexport}
     patterns:
     - {include: source.isc.cos}
+  field-definition:
+    patterns: 
+    - {include: '#class-definition'}
+    - {include: '#projection-definition'}
+    - {include: '#parameter-definition'}
+    - {include: '#property-definition'}
+    - {include: '#index-definition'}
+    - {include: '#fk-definition'}
+    - {include: '#trigger-definition'}
+    - {include: '#method-definition'}
+    - {include: '#query-definition'}
+    - {include: '#storage-definition'}
+  class-definition:
+    begin: (\<)(Class)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Class)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#udltext'}
+    - {include: '#field-definition'}
+    - {include: '#field-contents'}
+  projection-definition:
+    begin: (\<)(Projection)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Projection)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  parameter-definition:
+    begin: (\<)(Parameter)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Parameter)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  property-definition:
+    begin: (\<)(Property)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Property)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  index-definition: 
+    begin: (\<)(Index)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Index)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  fk-definition:
+    begin: (\<)(ForeignKey)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(ForeignKey)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  method-definition:
+    begin: (\<)(Method)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Method)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  query-definition:
+    begin: (\<)(Query)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Query)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  storage-definition:
+    begin: (\<)(Storage)\s*(name=\")(.*?)(\"\>)
+    end: (\</)(Storage)(\>)
+    name: comment.source.iscexport
+    beginCaptures:
+      '2': {name: support.class.source.iscexport}
+      '4': {name: storage.source.iscexport}
+    patterns:
+    - {include: '#field-contents'}
+  field-contents:
+    patterns:
+    - {include: '#cos-block'}
+    - {include: '#sqlquery'}
+    - {include: '#description'}
+    - {include: '#any-tag'}
+    - match: .
+      name: variable.language.source.iscexport
 ...
