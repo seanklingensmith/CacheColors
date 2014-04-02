@@ -963,20 +963,19 @@
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>captures</key>
-					<dict>
-						<key>1</key>
+					<key>begin</key>
+					<string>\{</string>
+					<key>end</key>
+					<string>\}</string>
+					<key>name</key>
+					<string>variable.source.isc.udl</string>
+					<key>patterns</key>
+					<array>
 						<dict>
-							<key>name</key>
-							<string>variable.source.isc.udl</string>
+							<key>match</key>
+							<string>([A-Za-z_%][A-Za-z0-9_]*)|(\*)</string>
 						</dict>
-					</dict>
-					<key>match</key>
-					<string>\{\s*([A-Za-z_%][A-Za-z0-9_]*)\s*\}</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#cos</string>
+					</array>
 				</dict>
 			</array>
 		</dict>

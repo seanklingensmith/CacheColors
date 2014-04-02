@@ -377,11 +377,11 @@ repository:
     begin: \{
     end: \}
     patterns:
-    - match: \{\s*([A-Za-z_%][A-Za-z0-9_]*)\s*\}
-      captures: 
-       '1': {name: variable.source.isc.udl}
-    - {include: '#cos'}
-    #- {include: $self}
+    - begin: \{
+      end: \}
+      name: variable.source.isc.udl
+      patterns:
+      - match: ([A-Za-z_%][A-Za-z0-9_]*)|(\*)
   
   value-expression: 
     comment: '{<expression>}'
